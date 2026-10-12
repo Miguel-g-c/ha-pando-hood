@@ -33,7 +33,8 @@ class Hood:
                 continue
             key, value = item.get("id"), item.get("value")
             if (
-                key in self.capabilities
+                isinstance(key, str)
+                and key in self.capabilities
                 and isinstance(value, (int, float))
                 and math.isfinite(value)
             ):

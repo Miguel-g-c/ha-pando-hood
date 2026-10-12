@@ -28,6 +28,11 @@ class PandoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return await self._credentials("reconfigure", user_input)
 
     async def _credentials(self, step, user_input):
+        fingerprint_default = ""
+        if step == "reauth_confirm":
+            fingerprint_default = self._get_reauth_entry().data.get(CONF_FINGERPRINT, "")
+        elif step == "reconfigure":
+            fingerprint_default = self._get_reconfigure_entry().data.get(CONF_FINGERPRINT, "")
         errors = {}
         if user_input is not None:
             pin = user_input.get(CONF_FINGERPRINT, "").replace(":", "").strip().lower()
@@ -76,7 +81,7 @@ class PandoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
-                    vol.Optional(CONF_FINGERPRINT, default=""): str,
+                    vol.Optional(CONF_FINGERPRINT, default=fingerprint_default): str,
                 }
             ),
             errors=errors,

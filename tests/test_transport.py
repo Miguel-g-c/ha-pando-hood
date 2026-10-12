@@ -83,3 +83,19 @@ async def test_fresh_state_and_command_ack_are_distinct_across_the_real_transpor
     finally:
         await cloud.close()
     assert not cloud.ready.is_set()
+
+
+async def test_malformed_status_item_does_not_stop_later_state_updates():
+    broker = Broker()
+    cloud = Cloud(HTTP(broker), "user", "secret", mqtt_factory=lambda *a, **kw: broker)
+    hoods = await cloud.devices()
+    await cloud.start(hoods, lambda uid: None, lambda: None)
+    try:
+        broker.incoming(
+            "root/pando/devices/test/status",
+            {"deviceId": "test", "values": [{"id": [], "value": 1}, {"id": {}, "value": 2}]},
+        )
+        async with asyncio.timeout(1):
+            assert (await cloud.refresh("test"))["device.fanSpeed"] == 2
+    finally:
+        await cloud.close()
