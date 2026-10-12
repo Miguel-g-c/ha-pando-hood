@@ -21,10 +21,10 @@ class PandoLight(PandoEntity, LightEntity):
         caps = coordinator.hood.capabilities
         if "device.lightColorTemperature" in caps:
             self._attr_supported_color_modes = {ColorMode.COLOR_TEMP}
-            spec = caps["device.lightColorTemperature"]
+            spec = coordinator.hood.bounds_for("device.lightColorTemperature")
             self._attr_min_color_temp_kelvin, self._attr_max_color_temp_kelvin = (
-                int(spec["minValue"]),
-                int(spec["maxValue"]),
+                spec.minimum,
+                spec.maximum,
             )
         elif "device.lightBrightness" in caps:
             self._attr_supported_color_modes = {ColorMode.BRIGHTNESS}
@@ -53,10 +53,10 @@ class PandoLight(PandoEntity, LightEntity):
             return
         values = {self.key: 1}
         if ATTR_BRIGHTNESS in kwargs:
-            spec = self.coordinator.hood.capabilities["device.lightBrightness"]
+            spec = self.coordinator.hood.bounds_for("device.lightBrightness")
             values["device.lightBrightness"] = max(
-                int(spec["minValue"]),
-                min(int(spec["maxValue"]), round(kwargs[ATTR_BRIGHTNESS] * 100 / 255)),
+                spec.minimum,
+                min(spec.maximum, round(kwargs[ATTR_BRIGHTNESS] * 100 / 255)),
             )
         if ATTR_COLOR_TEMP_KELVIN in kwargs:
             values["device.lightColorTemperature"] = int(kwargs[ATTR_COLOR_TEMP_KELVIN])

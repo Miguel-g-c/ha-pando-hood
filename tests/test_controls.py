@@ -1,6 +1,6 @@
 from homeassistant.components.light import ATTR_BRIGHTNESS, ATTR_COLOR_TEMP_KELVIN
 
-from custom_components.pando_hood.client import Hood
+from custom_components.pando_hood.client import Bounds, Hood
 from custom_components.pando_hood.fan import PandoFan
 from custom_components.pando_hood.light import PandoLight
 
@@ -11,10 +11,10 @@ class Coordinator:
             "test",
             "Hood",
             {
-                "device.fanSpeed": {"maxValue": 4},
-                "device.lightOnOff": {},
-                "device.lightBrightness": {"minValue": 10, "maxValue": 100},
-                "device.lightColorTemperature": {"minValue": 2700, "maxValue": 6000},
+                "device.fanSpeed": Bounds(0, 4),
+                "device.lightOnOff": Bounds(0, 1),
+                "device.lightBrightness": Bounds(10, 100),
+                "device.lightColorTemperature": Bounds(2700, 6000),
             },
         )
         self.data = {"device.fanSpeed": 3, "device.lightOnOff": 1}

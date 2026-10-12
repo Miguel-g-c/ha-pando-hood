@@ -1,6 +1,6 @@
 import pytest
 
-from custom_components.pando_hood.client import Hood, PandoError
+from custom_components.pando_hood.client import Bounds, Hood, PandoError
 from tools.live_check import light_check
 
 
@@ -23,7 +23,7 @@ class Remote:
 
 @pytest.mark.parametrize("fail", [False, True])
 async def test_light_diagnostic_restores_initial_state_even_after_ambiguous_failure(fail):
-    hood = Hood("test", "Hood", {"device.lightOnOff": {"minValue": 0, "maxValue": 1}})
+    hood = Hood("test", "Hood", {"device.lightOnOff": Bounds(0, 1)})
     remote = Remote(fail)
     if fail:
         with pytest.raises(PandoError):

@@ -1,6 +1,6 @@
 import pytest
 
-from custom_components.pando_hood.client import AuthenticationError
+from custom_components.pando_hood.client import AuthenticationError, PandoError
 from custom_components.pando_hood.cloud import Cloud
 
 
@@ -48,3 +48,56 @@ async def test_rejected_credentials_do_not_loop_or_expose_response():
         await Cloud(http, "user", "secret").devices()
     assert "secret" not in str(error.value)
     assert http.count == 1
+
+
+@pytest.mark.parametrize(
+    "device",
+    [
+        None,
+        {
+            "uid": "hood",
+            "capabilities": [
+                {"capabilityUid": "device.fanSpeed", "minValue": 0, "maxValue": 10**500}
+            ],
+        },
+        {"uid": "hood", "capabilities": [{"capabilityUid": "device.fanSpeed"}]},
+        {
+            "uid": "hood",
+            "capabilities": [{"capabilityUid": "device.fanSpeed", "minValue": 4, "maxValue": 0}],
+        },
+        {
+            "uid": "hood",
+            "capabilities": [
+                {"capabilityUid": "device.fanSpeed", "minValue": 0, "maxValue": float("nan")}
+            ],
+        },
+    ],
+)
+async def test_invalid_device_metadata_fails_before_entity_or_command_creation(device):
+    http = HTTP([Reply(200, {"JWT": "token"}), Reply(200, [device])])
+    with pytest.raises(PandoError, match="metadata"):
+        await Cloud(http, "user", "secret").devices()
+
+
+async def test_read_only_and_unknown_capabilities_do_not_require_control_bounds():
+    http = HTTP(
+        [
+            Reply(200, {"JWT": "token"}),
+            Reply(
+                200,
+                [
+                    {
+                        "uid": "hood",
+                        "capabilities": [
+                            {"capabilityUid": "device.hoodPower"},
+                            {"capabilityUid": "future.readonly"},
+                        ],
+                    }
+                ],
+            ),
+        ]
+    )
+    (hood,) = await Cloud(http, "user", "secret").devices()
+    assert set(hood.capabilities) == {"device.hoodPower", "future.readonly"}
+    assert hood.update({"deviceId": "hood", "values": [{"id": "device.hoodPower", "value": 42}]})
+    assert hood.values == {"device.hoodPower": 42}

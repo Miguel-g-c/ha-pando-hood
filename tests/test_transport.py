@@ -2,8 +2,12 @@ import asyncio
 import json
 from types import SimpleNamespace
 
+import aiomqtt
+import pytest
 from test_cloud import Reply
 
+from custom_components.pando_hood import cloud as cloud_module
+from custom_components.pando_hood.client import AuthenticationError, PandoError
 from custom_components.pando_hood.cloud import Cloud
 
 
@@ -11,8 +15,10 @@ class Broker:
     def __init__(self):
         self.queue = asyncio.Queue()
         self.subscriptions = set()
+        self.connections = asyncio.Queue()
 
     async def __aenter__(self):
+        self.connections.put_nowait(None)
         return self
 
     async def __aexit__(self, *args):
@@ -27,7 +33,10 @@ class Broker:
 
     async def stream(self):
         while True:
-            yield await self.queue.get()
+            item = await self.queue.get()
+            if isinstance(item, Exception):
+                raise item
+            yield item
 
     def incoming(self, topic, payload):
         self.queue.put_nowait(
@@ -99,3 +108,84 @@ async def test_malformed_status_item_does_not_stop_later_state_updates():
             assert (await cloud.refresh("test"))["device.fanSpeed"] == 2
     finally:
         await cloud.close()
+
+
+async def test_tls_startup_failure_is_reported_promptly_and_close_is_safe(monkeypatch):
+    def failed_context(fingerprint):
+        raise ValueError("private TLS detail")
+
+    monkeypatch.setattr(cloud_module, "mqtt_context", failed_context)
+    broker = Broker()
+    cloud = Cloud(HTTP(broker), "user", "secret", mqtt_factory=lambda *a, **kw: broker)
+    hoods = await cloud.devices()
+    with pytest.raises(PandoError, match="MQTT") as error:
+        async with asyncio.timeout(1):
+            await cloud.start(hoods, lambda uid: None, lambda: None)
+    assert "private TLS detail" not in str(error.value)
+    await cloud.close()
+    await cloud.close()
+    assert not cloud.ready.is_set()
+
+
+@pytest.mark.parametrize(
+    "failure", [RuntimeError("private broker detail"), aiomqtt.MqttCodeError(4)]
+)
+async def test_broker_startup_failures_keep_authentication_distinct_and_cleanup(failure):
+    class FailedBroker(Broker):
+        async def __aenter__(self):
+            raise failure
+
+    broker = FailedBroker()
+    cloud = Cloud(HTTP(broker), "user", "secret", mqtt_factory=lambda *a, **kw: broker)
+    hoods = await cloud.devices()
+    with pytest.raises(PandoError) as error:
+        async with asyncio.timeout(1):
+            await cloud.start(hoods, lambda uid: None, lambda: None)
+    assert isinstance(error.value, AuthenticationError) == isinstance(
+        failure, aiomqtt.MqttCodeError
+    )
+    assert "private broker detail" not in str(error.value)
+    await cloud.close()
+    assert not cloud.ready.is_set()
+
+
+async def test_disconnect_reconnects_and_resumes_fresh_state():
+    broker = Broker()
+    cloud = Cloud(HTTP(broker), "user", "secret", mqtt_factory=lambda *a, **kw: broker)
+    disconnected = asyncio.Event()
+    await cloud.start(await cloud.devices(), lambda uid: None, disconnected.set)
+    try:
+        await broker.connections.get()
+        broker.queue.put_nowait(aiomqtt.MqttError("connection lost"))
+        async with asyncio.timeout(3):
+            await disconnected.wait()
+            assert not cloud.ready.is_set()
+            await broker.connections.get()
+            assert (await cloud.refresh("test"))["device.fanSpeed"] == 2
+    finally:
+        await cloud.close()
+
+
+async def test_cancelled_startup_closes_listener_and_preserves_cancellation():
+    entering = asyncio.Event()
+    exited = asyncio.Event()
+
+    class WaitingBroker(Broker):
+        async def __aenter__(self):
+            entering.set()
+            try:
+                await asyncio.Event().wait()
+            finally:
+                exited.set()
+
+    broker = WaitingBroker()
+    cloud = Cloud(HTTP(broker), "user", "secret", mqtt_factory=lambda *a, **kw: broker)
+    task = asyncio.create_task(cloud.start(await cloud.devices(), lambda uid: None, lambda: None))
+    async with asyncio.timeout(1):
+        await entering.wait()
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+    assert exited.is_set()
+    assert not cloud.ready.is_set()
+    await cloud.close()

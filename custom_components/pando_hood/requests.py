@@ -1,22 +1,29 @@
 """Correlate HTTPS commands with asynchronous MQTT acknowledgements."""
 
 import asyncio
+from collections.abc import Awaitable, Callable, Mapping
 from uuid import uuid4
 
-from .client import PandoError
+from .client import CommandValues, PandoError
 
 
 class Requests:
-    def __init__(self, timeout=20):
+    def __init__(self, timeout: float = 20) -> None:
         self.timeout = timeout
-        self.pending = {}
+        self.pending: dict[tuple[str, str], asyncio.Future[Mapping[str, object]]] = {}
 
-    async def send(self, uid, command, values, post):
+    async def send(
+        self,
+        uid: str,
+        command: str,
+        values: CommandValues,
+        post: Callable[[str, dict[str, object]], Awaitable[None]],
+    ) -> None:
         request_id = str(uuid4())
         key = (uid, request_id)
         future = asyncio.get_running_loop().create_future()
         self.pending[key] = future
-        body = {
+        body: dict[str, object] = {
             "command": command,
             "requestId": request_id,
             "parameters": [{"id": k, "value": v} for k, v in values.items()],
@@ -40,12 +47,12 @@ class Requests:
             else:
                 future.cancel()
 
-    def receive(self, uid, request_id, payload):
+    def receive(self, uid: str, request_id: str, payload: Mapping[str, object]) -> None:
         future = self.pending.get((uid, request_id))
         if future is not None and not future.done():
             future.set_result(payload)
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         for future in self.pending.values():
             if not future.done():
                 future.set_exception(PandoError("MQTT disconnected; command result is unknown"))

@@ -19,7 +19,7 @@ class PandoFan(PandoEntity, FanEntity):
 
     def __init__(self, coordinator):
         super().__init__(coordinator, "device.fanSpeed", "Motor")
-        self._attr_speed_count = int(coordinator.hood.capabilities[self.key]["maxValue"])
+        self._attr_speed_count = coordinator.hood.bounds_for(self.key).maximum
         self.last_speed = 1
 
     @property

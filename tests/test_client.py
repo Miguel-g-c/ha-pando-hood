@@ -1,6 +1,6 @@
 import pytest
 
-from custom_components.pando_hood.client import Hood
+from custom_components.pando_hood.client import Bounds, Hood
 
 
 class Network:
@@ -16,8 +16,8 @@ async def test_invalid_or_read_only_command_never_reaches_hood():
         "test",
         "Hood",
         {
-            "device.fanSpeed": {"minValue": 0, "maxValue": 4},
-            "device.hoodPower": {"minValue": 0, "maxValue": 1000},
+            "device.fanSpeed": Bounds(0, 4),
+            "device.hoodPower": None,
         },
     )
     network = Network()
@@ -33,7 +33,9 @@ async def test_invalid_or_read_only_command_never_reaches_hood():
 
 
 def test_partial_push_preserves_other_state_and_ignores_other_devices():
-    hood = Hood("test", "Hood", {"device.fanSpeed": {}, "device.lightOnOff": {}})
+    hood = Hood(
+        "test", "Hood", {"device.fanSpeed": Bounds(0, 4), "device.lightOnOff": Bounds(0, 1)}
+    )
     assert hood.update(
         {
             "deviceId": "test",
