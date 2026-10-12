@@ -26,7 +26,10 @@ class PinnedContext(ssl.SSLContext):
         # packet (which contains credentials) can precede pin validation.
         kwargs["do_handshake_on_connect"] = True
         sock = super().wrap_socket(*args, **kwargs)
-        actual = hashlib.sha256(sock.getpeercert(binary_form=True)).hexdigest()
+        certificate = sock.getpeercert(binary_form=True)
+        # A completed TLS client handshake requires a server certificate.
+        assert certificate is not None
+        actual = hashlib.sha256(certificate).hexdigest()
         if not hmac.compare_digest(actual, self.fingerprint):
             sock.close()
             raise ssl.SSLError("Pando MQTT certificate pin mismatch")

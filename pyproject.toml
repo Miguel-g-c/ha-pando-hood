@@ -1,8 +1,37 @@
+[project]
+name = "ha-pando-hood"
+version = "0.1.0"
+description = "Pando hood custom integration for Home Assistant"
+requires-python = ">=3.14.2"
+license = "MIT"
+license-files = ["LICENSE.md"]
+dependencies = ["aiohttp>=3.11", "aiomqtt==2.5.0"]
+
+[dependency-groups]
+dev = [
+    "cryptography>=44",
+    "homeassistant==2026.10.1",
+    "pytest>=8",
+    "pytest-asyncio>=1",
+    "ruff>=0.11",
+    "ty>=0.0.1",
+]
+
+[tool.uv]
+package = false
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
+pythonpath = ["."]
+
 [tool.ruff]
 target-version = "py313"
 line-length = 100
+
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ty.environment]
+extra-paths = ["tests"]

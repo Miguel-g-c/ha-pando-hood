@@ -33,4 +33,4 @@ State can be partial. Integer 0/1 is used for boolean capabilities. Command ackn
 
 Known writable controls: `device.onOff`, `device.fanSpeed`, `device.lightOnOff`, `device.lightBrightness`, `device.lightColorTemperature`, `device.cleanAirEnabled`. Bounds come from capability metadata. Power, flow and filter-time capabilities remain read-only. Filter remaining values are seconds; the Android widget divides by 3600 for hours.
 
-The MQTT certificate observed on 12 October 2026 was expired. See README for exact pinning and verification details. No unconditional insecure-TLS mode exists in this client.
+The MQTT certificate observed on 12 October 2026 was expired. See [Connection security](SECURITY.md) for certificate trust and verification details. No unconditional insecure-TLS mode exists in this client.

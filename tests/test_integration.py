@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import pytest
 from homeassistant import loader
 from homeassistant.config_entries import ConfigEntries
 from homeassistant.core import HomeAssistant
@@ -11,7 +10,6 @@ from test_transport import HTTP, Broker
 from custom_components.pando_hood import cloud, config_flow
 
 
-@pytest.mark.asyncio
 async def test_ha_entry_creates_live_fan_and_service_updates_reported_state(tmp_path, monkeypatch):
     (tmp_path / "custom_components").symlink_to(
         Path(__file__).resolve().parents[1] / "custom_components"
@@ -40,10 +38,14 @@ async def test_ha_entry_creates_live_fan_and_service_updates_reported_state(tmp_
         await hass.async_block_till_done()
         entities = hass.states.async_entity_ids("fan")
         assert len(entities) == 1
-        assert hass.states.get(entities[0]).attributes["percentage"] == 50
+        state = hass.states.get(entities[0])
+        assert state is not None
+        assert state.attributes["percentage"] == 50
         await hass.services.async_call("fan", "turn_off", {"entity_id": entities[0]}, blocking=True)
         await hass.async_block_till_done()
-        assert hass.states.get(entities[0]).state == "off"
+        state = hass.states.get(entities[0])
+        assert state is not None
+        assert state.state == "off"
         transport = entry.runtime_data.cloud
         assert await hass.config_entries.async_unload(entry.entry_id)
         assert not transport.ready.is_set()

@@ -3,15 +3,20 @@
 import logging
 from datetime import timedelta
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, HomeAssistantError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .client import AuthenticationError, PandoError
+from .client import AuthenticationError, Hood, PandoError
+from .cloud import Cloud
 from .const import DOMAIN
 
 
-class PandoCoordinator(DataUpdateCoordinator):
-    def __init__(self, hass, entry, cloud, hood):
+class PandoCoordinator(DataUpdateCoordinator[dict[str, int | float]]):
+    config_entry: ConfigEntry
+
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, cloud: Cloud, hood: Hood) -> None:
         super().__init__(
             hass,
             logging.getLogger(__name__),

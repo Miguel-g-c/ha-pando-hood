@@ -1,4 +1,3 @@
-import pytest
 from homeassistant.components.light import ATTR_BRIGHTNESS, ATTR_COLOR_TEMP_KELVIN
 
 from custom_components.pando_hood.client import Hood
@@ -26,7 +25,6 @@ class Coordinator:
         self.sent.append(values)
 
 
-@pytest.mark.asyncio
 async def test_motor_off_leaves_light_alone_and_speed_percentages_match_four_steps():
     c = Coordinator()
     fan = PandoFan(c)
@@ -37,7 +35,6 @@ async def test_motor_off_leaves_light_alone_and_speed_percentages_match_four_ste
     assert c.data["device.lightOnOff"] == 1
 
 
-@pytest.mark.asyncio
 async def test_light_clamps_low_brightness_and_zero_turns_it_off():
     c = Coordinator()
     light = PandoLight(c)

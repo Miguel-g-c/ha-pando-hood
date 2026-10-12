@@ -71,7 +71,8 @@ class PandoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         return await self.async_step_device()
         return self.async_show_form(
             step_id=step,
-            data_schema=vol.Schema(
+            # HA accepts legacy voluptuous schemas at runtime for older Core support.
+            data_schema=vol.Schema(  # ty: ignore[invalid-argument-type]
                 {
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
@@ -92,7 +93,8 @@ class PandoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
         return self.async_show_form(
             step_id="device",
-            data_schema=vol.Schema(
+            # HA accepts legacy voluptuous schemas at runtime for older Core support.
+            data_schema=vol.Schema(  # ty: ignore[invalid-argument-type]
                 {vol.Required(CONF_UID): vol.In({h.uid: f"{h.name} ({h.uid})" for h in self.hoods})}
             ),
         )

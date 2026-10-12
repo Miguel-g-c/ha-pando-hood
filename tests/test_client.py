@@ -11,7 +11,6 @@ class Network:
         self.sent.append((uid, command, values))
 
 
-@pytest.mark.asyncio
 async def test_invalid_or_read_only_command_never_reaches_hood():
     hood = Hood(
         "test",

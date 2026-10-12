@@ -32,5 +32,6 @@ class PandoSensor(PandoEntity, SensorEntity):
         self._attr_suggested_display_precision = 1 if divisor == 3600 else 0
 
     @property
-    def native_value(self):
+    # HA exposes this as a writable cached_property; live state needs a property.
+    def native_value(self):  # ty: ignore[invalid-property-type-override]
         return self.value / self.divisor if self.value is not None else None

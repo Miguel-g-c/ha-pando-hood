@@ -23,7 +23,8 @@ class PandoFan(PandoEntity, FanEntity):
         self.last_speed = 1
 
     @property
-    def percentage(self):
+    # HA exposes this as a writable cached_property; live state needs a property.
+    def percentage(self):  # ty: ignore[invalid-property-type-override]
         if self.value is None:
             return None
         return round(self.value * 100 / self._attr_speed_count)

@@ -21,7 +21,6 @@ class Remote:
             raise PandoError("Acknowledgement lost after command took effect")
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize("fail", [False, True])
 async def test_light_diagnostic_restores_initial_state_even_after_ambiguous_failure(fail):
     hood = Hood("test", "Hood", {"device.lightOnOff": {"minValue": 0, "maxValue": 1}})

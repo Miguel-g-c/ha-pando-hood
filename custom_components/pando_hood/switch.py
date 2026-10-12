@@ -18,7 +18,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class PandoSwitch(PandoEntity, SwitchEntity):
     @property
-    def is_on(self):
+    # HA exposes this as a writable cached_property; live state needs a property.
+    def is_on(self):  # ty: ignore[invalid-property-type-override]
         return bool(self.value)
 
     async def async_turn_on(self, **kwargs):

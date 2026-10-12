@@ -2,7 +2,6 @@ import asyncio
 import json
 from types import SimpleNamespace
 
-import pytest
 from test_cloud import Reply
 
 from custom_components.pando_hood.cloud import Cloud
@@ -69,7 +68,6 @@ class HTTP:
         return Reply(204, None)
 
 
-@pytest.mark.asyncio
 async def test_fresh_state_and_command_ack_are_distinct_across_the_real_transport():
     broker = Broker()
     cloud = Cloud(HTTP(broker), "user", "secret", mqtt_factory=lambda *a, **kw: broker)

@@ -28,7 +28,6 @@ class HTTP:
         return next(self.replies)
 
 
-@pytest.mark.asyncio
 async def test_expired_session_renews_once_and_returns_devices():
     http = HTTP(
         [
@@ -43,7 +42,6 @@ async def test_expired_session_renews_once_and_returns_devices():
     assert http.count == 4
 
 
-@pytest.mark.asyncio
 async def test_rejected_credentials_do_not_loop_or_expose_response():
     http = HTTP([Reply(401, {"private": "secret"})])
     with pytest.raises(AuthenticationError) as error:

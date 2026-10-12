@@ -1,4 +1,3 @@
-import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from test_cloud import HTTP, Reply
@@ -6,7 +5,6 @@ from test_cloud import HTTP, Reply
 from custom_components.pando_hood import config_flow
 
 
-@pytest.mark.asyncio
 async def test_flow_rejects_wrong_credentials_then_creates_selected_hood_entry(
     tmp_path, monkeypatch
 ):

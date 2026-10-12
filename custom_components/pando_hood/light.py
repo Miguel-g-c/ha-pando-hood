@@ -33,11 +33,13 @@ class PandoLight(PandoEntity, LightEntity):
         self._attr_color_mode = next(iter(self._attr_supported_color_modes))
 
     @property
-    def is_on(self):
+    # HA exposes this as a writable cached_property; live state needs a property.
+    def is_on(self):  # ty: ignore[invalid-property-type-override]
         return bool(self.value)
 
     @property
-    def brightness(self):
+    # HA exposes this as a writable cached_property; live state needs a property.
+    def brightness(self):  # ty: ignore[invalid-property-type-override]
         value = (self.coordinator.data or {}).get("device.lightBrightness")
         return round(value * 255 / 100) if value is not None else None
 

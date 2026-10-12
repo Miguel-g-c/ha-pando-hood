@@ -4,7 +4,6 @@ from custom_components.pando_hood.client import PandoError
 from custom_components.pando_hood.requests import Requests
 
 
-@pytest.mark.asyncio
 async def test_ack_can_arrive_before_https_returns_and_does_not_change_state():
     requests = Requests(timeout=0.1)
 
@@ -15,7 +14,6 @@ async def test_ack_can_arrive_before_https_returns_and_does_not_change_state():
     await requests.send("hood", "setValue", {"device.lightOnOff": 1}, post)
 
 
-@pytest.mark.asyncio
 async def test_rejected_missing_and_disconnected_acknowledgements_fail_commands():
     for mode in ("rejected", "missing", "disconnect"):
         requests = Requests(timeout=0.01)

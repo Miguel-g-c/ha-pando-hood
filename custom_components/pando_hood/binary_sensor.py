@@ -23,5 +23,6 @@ class PandoFilter(PandoEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
     @property
-    def is_on(self):
+    # HA exposes this as a writable cached_property; live state needs a property.
+    def is_on(self):  # ty: ignore[invalid-property-type-override]
         return bool(self.value)
