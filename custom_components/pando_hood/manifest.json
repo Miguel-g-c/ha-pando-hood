@@ -1,0 +1,11 @@
+{
+  "domain": "pando_hood",
+  "name": "Pando Hood",
+  "version": "0.1.0",
+  "config_flow": true,
+  "documentation": "https://www.pando.es/",
+  "requirements": ["aiomqtt==2.5.0"],
+  "codeowners": [],
+  "iot_class": "cloud_push",
+  "integration_type": "device"
+}

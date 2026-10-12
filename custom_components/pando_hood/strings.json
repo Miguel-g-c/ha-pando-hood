@@ -1,0 +1,52 @@
+{
+  "title": "Pando Hood",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Pando account",
+        "description": "Enter your Pando app credentials. MQTT normally verifies the server certificate. The optional SHA-256 fingerprint trusts exactly one certificate, including if it is expired. Obtain and verify it separately; a certificate change will stop the connection. HTTPS always uses normal validation.",
+        "data": {
+          "username": "Account email",
+          "password": "Password",
+          "mqtt_fingerprint": "MQTT certificate SHA-256 fingerprint (optional)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pando account",
+        "description": "Enter your Pando app credentials. MQTT normally verifies the server certificate. The optional SHA-256 fingerprint trusts exactly one certificate, including if it is expired. Obtain and verify it separately; a certificate change will stop the connection. HTTPS always uses normal validation.",
+        "data": {
+          "username": "Account email",
+          "password": "Password",
+          "mqtt_fingerprint": "MQTT certificate SHA-256 fingerprint (optional)"
+        }
+      },
+      "reconfigure": {
+        "title": "Pando account",
+        "description": "Enter your Pando app credentials. MQTT normally verifies the server certificate. The optional SHA-256 fingerprint trusts exactly one certificate, including if it is expired. Obtain and verify it separately; a certificate change will stop the connection. HTTPS always uses normal validation.",
+        "data": {
+          "username": "Account email",
+          "password": "Password",
+          "mqtt_fingerprint": "MQTT certificate SHA-256 fingerprint (optional)"
+        }
+      },
+      "device": {
+        "title": "Choose a hood",
+        "data": {
+          "device_uid": "Hood"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Pando rejected the credentials.",
+      "cannot_connect": "Cannot reach Pando.",
+      "invalid_fingerprint": "Use a SHA-256 fingerprint with 64 hex digits.",
+      "device_not_found": "This hood is not in that account."
+    },
+    "abort": {
+      "already_configured": "This hood is already configured.",
+      "no_devices": "No enabled hoods found.",
+      "reauth_successful": "Credentials updated.",
+      "reconfigure_successful": "Configuration updated."
+    }
+  }
+}
