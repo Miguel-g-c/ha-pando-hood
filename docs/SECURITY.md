@@ -14,3 +14,12 @@ Account credentials are stored in Home Assistant's config entry, as required for
 
 
 The certificate fingerprint is a hash of the public server certificate, not a password or private key. Publishing it does not disclose a secret. Its authenticity and freshness still require independent verification.
+
+## Setup and certificate renewal
+
+1. Try leaving **MQTT certificate SHA-256 fingerprint** blank for normal certificate verification.
+2. If setup fails because of the expired MQTT certificate, read the trust trade-off above. If you accept trusting the exact certificate verified on 12 October 2026, enter its fingerprint from this document when adding the integration. This is an explicit trust decision; the integration never enables it automatically.
+3. To change an existing entry, open **Settings → Devices & services → Pando Hood → ⋮ → Reconfigure**. Enter your account credentials and either clear the fingerprint to restore normal verification or supply an independently verified replacement.
+4. If a stored pin stops matching, first try clearing it: Pando may have renewed its certificate. Never adopt a new fingerprint merely because it appears in a connection error.
+
+Report a suspected credential leak through [GitHub private vulnerability reporting](https://github.com/Miguel-g-c/ha-pando-hood/security/advisories/new). Do not post secrets in public issues.

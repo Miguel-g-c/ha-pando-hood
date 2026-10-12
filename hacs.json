@@ -1,1 +1,4 @@
-{"name":"Pando Hood", "homeassistant":"2025.2.0", "render_readme":true}
+{
+  "name": "Pando Hood",
+  "homeassistant": "2026.8.2"
+}

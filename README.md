@@ -16,18 +16,30 @@ Entities appear only for capabilities the account reports. Filter 2 may be unuse
 
 ## Installation
 
-This repository has the custom-integration layout needed by HACS. A public GitHub repository/release is still needed before installation through HACS. Once published, add its URL as a HACS custom repository of category **Integration**, install Pando Hood and restart Home Assistant.
+The hood must already be enrolled and working in the Pando app. You need Home Assistant 2026.8.2 or later and internet access. No extra hardware, local lab or MQTT broker add-on is needed.
 
-For the current development version:
+### HACS
 
-1. Copy `custom_components/pando_hood` into Home Assistant's `/config/custom_components/pando_hood`.
-2. Restart Home Assistant.
-3. Open **Settings → Devices & services → Add integration → Pando Hood**.
-4. Enter the email and password used in Pando, then select the hood.
+1. Open **HACS → ⋮ → Custom repositories**.
+2. Enter `https://github.com/Miguel-g-c/ha-pando-hood` and select **Integration**.
+3. Find **Pando Hood**, download it and restart Home Assistant.
+4. Follow the configuration steps below.
 
-Home Assistant 2025.2 or later is the declared minimum. Tests pass against 2026.8.2 and 2026.10.1; live installation has been verified on 2026.8.2. The minimum version has not been tested.
+The repository is available through HACS custom repositories. Inclusion in the default catalog depends on HACS maintainer approval.
 
-For MQTT connection troubleshooting and certificate trust settings, see [Connection security](docs/SECURITY.md).
+### Manual installation
+
+1. Download the source archive from the [latest release](https://github.com/Miguel-g-c/ha-pando-hood/releases/latest).
+2. Copy its `custom_components/pando_hood` folder into Home Assistant's `/config/custom_components/pando_hood`.
+3. Restart Home Assistant.
+
+### Configuration
+
+1. Open **Settings → Devices & services → Add integration → Pando Hood**.
+2. Enter the email and password used in Pando. The current MQTT server certificate is expired: review [Connection security](docs/SECURITY.md#setup-and-certificate-renewal) before deciding whether to fill in the optional certificate fingerprint field.
+3. Select the hood. Its supported entities appear on the device page.
+
+Tests have passed against Home Assistant 2026.8.2 and 2026.10.1; live installation has been verified on 2026.8.2. The full release test suite runs against 2026.10.1.
 
 ## Behavior and limitations
 
@@ -63,4 +75,8 @@ Enter credentials at its terminal prompts, never into issue reports. The check r
 
 Entities depend on the coordinator and model rather than cloud protocol details, so a future local transport can implement `Transport.command` and equivalent state/lifecycle behavior. A local endpoint must still be proven before such a transport can be implemented.
 
-Before publishing, point `manifest.json` documentation at this repository's README, set its verified GitHub code owner, and validate HACS metadata against the final repository.
+## Support and contributions
+
+Open an [issue](https://github.com/Miguel-g-c/ha-pando-hood/issues) with your Home Assistant version, integration version, hood model/firmware, error text and redacted diagnostics. Never include account credentials, tokens or your full HA configuration. For unavailable entities, first confirm the hood still works in Pando and review [Connection security](docs/SECURITY.md).
+
+Small fixes and tests are welcome. Run the development checks above before submitting a pull request. New device support should include sanitized capability examples and explain which controls were tested on hardware.
