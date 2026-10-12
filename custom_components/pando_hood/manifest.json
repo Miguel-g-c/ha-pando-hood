@@ -1,16 +1,16 @@
 {
   "domain": "pando_hood",
   "name": "Pando Hood",
-  "version": "0.1.1",
-  "config_flow": true,
-  "documentation": "https://github.com/Miguel-g-c/ha-pando-hood",
-  "requirements": [
-    "aiomqtt==2.5.0"
-  ],
   "codeowners": [
     "@Miguel-g-c"
   ],
-  "iot_class": "cloud_push",
+  "config_flow": true,
+  "documentation": "https://github.com/Miguel-g-c/ha-pando-hood",
   "integration_type": "device",
-  "issue_tracker": "https://github.com/Miguel-g-c/ha-pando-hood/issues"
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/Miguel-g-c/ha-pando-hood/issues",
+  "requirements": [
+    "aiomqtt==2.5.0"
+  ],
+  "version": "0.1.1"
 }
