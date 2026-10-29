@@ -49,7 +49,7 @@ Partial state updates preserve unchanged fields. A fresh status request runs app
 
 Light brightness below the device minimum is clamped; zero means off. Range checking uses device metadata and permits only the known control capabilities. No Wi-Fi enrollment, firmware flashing, account claiming or filter-reset commands are exposed.
 
-This is an unofficial, reverse-engineered integration. Every exposed control (motor speeds, light on/off, brightness and white temperature, overall power, air-clean) and the sensors have been verified on a real E297/120 V1130e BL (firmware v.2(1)) through Home Assistant over several weeks of use.
+This is an unofficial, reverse-engineered integration. Every exposed control (motor speeds, light on/off, brightness and white temperature, overall power, air-clean) and the sensors have been tested on a real E297/120 V1130e BL (firmware v.2(1)) through Home Assistant and work reliably.
 
 ## Development and live check
 
