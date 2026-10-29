@@ -39,7 +39,7 @@ The repository is available through HACS custom repositories. Inclusion in the d
 2. Enter the email and password used in Pando. The current MQTT server certificate is expired: review [Connection security](docs/SECURITY.md#setup-and-certificate-renewal) before deciding whether to fill in the optional certificate fingerprint field.
 3. Select the hood. Its supported entities appear on the device page.
 
-Tests have passed against Home Assistant 2026.8.2 and 2026.10.1; live installation has been verified on 2026.8.2. The full release test suite runs against 2026.10.1.
+Tests have passed against Home Assistant 2026.8.2 and 2026.10.1; live installation has been verified on 2026.8.2 and 2026.10.4. The full release test suite runs against 2026.10.1.
 
 ## Behavior and limitations
 
@@ -49,7 +49,7 @@ Partial state updates preserve unchanged fields. A fresh status request runs app
 
 Light brightness below the device minimum is clamped; zero means off. Range checking uses device metadata and permits only the known control capabilities. No Wi-Fi enrollment, firmware flashing, account claiming or filter-reset commands are exposed.
 
-This is an unofficial, reverse-engineered integration. Fresh state and light on/off plus restoration have been validated against the real hood. Fan, dimming, temperature and air-clean commands still need live validation before relying on automations.
+This is an unofficial, reverse-engineered integration. Every exposed control (motor speeds, light on/off, brightness and white temperature, overall power, air-clean) and the sensors have been verified on a real E297/120 V1130e BL (firmware v.2(1)) through Home Assistant over several weeks of use.
 
 ## Development and live check
 
