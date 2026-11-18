@@ -1,0 +1,52 @@
+{
+  "title": "Pando Hood",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Cuenta de Pando",
+        "description": "Introduce las credenciales de la app de Pando. MQTT normalmente verifica el certificado del servidor. La huella SHA-256 opcional confía en un único certificado, aunque esté caducado. Obtenla y verifícala por tu cuenta; si el certificado cambia, la conexión se detendrá. HTTPS siempre usa la validación normal.",
+        "data": {
+          "username": "Correo electrónico de la cuenta",
+          "password": "Contraseña",
+          "mqtt_fingerprint": "Huella SHA-256 del certificado MQTT (opcional)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Cuenta de Pando",
+        "description": "Introduce las credenciales de la app de Pando. MQTT normalmente verifica el certificado del servidor. La huella SHA-256 opcional confía en un único certificado, aunque esté caducado. Obtenla y verifícala por tu cuenta; si el certificado cambia, la conexión se detendrá. HTTPS siempre usa la validación normal.",
+        "data": {
+          "username": "Correo electrónico de la cuenta",
+          "password": "Contraseña",
+          "mqtt_fingerprint": "Huella SHA-256 del certificado MQTT (opcional)"
+        }
+      },
+      "reconfigure": {
+        "title": "Cuenta de Pando",
+        "description": "Introduce las credenciales de la app de Pando. MQTT normalmente verifica el certificado del servidor. La huella SHA-256 opcional confía en un único certificado, aunque esté caducado. Obtenla y verifícala por tu cuenta; si el certificado cambia, la conexión se detendrá. HTTPS siempre usa la validación normal.",
+        "data": {
+          "username": "Correo electrónico de la cuenta",
+          "password": "Contraseña",
+          "mqtt_fingerprint": "Huella SHA-256 del certificado MQTT (opcional)"
+        }
+      },
+      "device": {
+        "title": "Elige una campana",
+        "data": {
+          "device_uid": "Campana"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Pando ha rechazado las credenciales.",
+      "cannot_connect": "No se puede conectar con Pando.",
+      "invalid_fingerprint": "Usa una huella SHA-256 de 64 dígitos hexadecimales.",
+      "device_not_found": "Esta campana no está en esa cuenta."
+    },
+    "abort": {
+      "already_configured": "Esta campana ya está configurada.",
+      "no_devices": "No se han encontrado campanas activas.",
+      "reauth_successful": "Credenciales actualizadas.",
+      "reconfigure_successful": "Configuración actualizada."
+    }
+  }
+}
