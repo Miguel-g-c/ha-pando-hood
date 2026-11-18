@@ -1,6 +1,6 @@
 # Pando Hood for Home Assistant
 
-Unofficial integration for Pando Wi-Fi hoods. It talks to the same Pando cloud as the Android app, so it needs internet access. Local control is not supported yet.
+Unofficial integration for Pando Wi-Fi hoods. It talks to the same Pando cloud as the Pando Android / iOS app, so it needs internet access. Local control is not supported yet.
 
 Tested on a real E297/120 V1130e BL with firmware v.2(1). All controls and sensors below work on that hood. Other models may work, but they are not tested.
 
