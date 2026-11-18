@@ -13,9 +13,9 @@ No extra hardware or MQTT broker is needed.
 
 ## Installation
 
-### HACS
+### Marketplace
 
-1. Open **HACS** and search for **Pando Hood**.
+1. Go to **Settings → Marketplace** and search for **Pando Hood**.
 2. Download it and restart Home Assistant.
 
 ### Manual
