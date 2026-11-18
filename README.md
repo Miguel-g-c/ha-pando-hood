@@ -81,8 +81,6 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
-Run the full test suite on Linux. On macOS, Python 3.14.7 crashes during cleanup after the full HA test run.
-
 To check a real hood without changing anything:
 
 ```sh
